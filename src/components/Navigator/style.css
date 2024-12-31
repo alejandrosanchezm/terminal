@@ -1,0 +1,14 @@
+.navigator-header {
+    position: fixed;
+    top: 12;
+    left: 0;
+    width: 100%;
+    background-color: white; /* O el color que prefieras */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Para dar un efecto de sombra */
+    z-index: 1000; /* Asegúrate de que el header esté encima del contenido */
+  }
+  
+  .navigator-container {
+    overflow: auto;
+  }
+  

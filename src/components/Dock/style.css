@@ -1,0 +1,94 @@
+.dock-container {
+  position: fixed; /* Fijamos el contenedor en la pantalla */
+  bottom: 6px; /* 6px desde la parte inferior */
+  left: 50%; /* Centrado horizontal */
+  transform: translateX(-50%); /* Corrige el centrado exacto */
+  height: 65px;
+  background: #b5b3b3e0;
+  width: fit-content; /* El ancho ajusta al contenido */
+  border-radius: 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center; /* Centra los elementos hijos horizontalmente */
+  align-items: center; /* Centra los elementos hijos verticalmente */
+  opacity: 0; /* Inicialmente invisible */
+  pointer-events: none; /* Para evitar interacción cuando esté oculto */
+  transition: opacity 0.3s ease-out;
+}
+
+.dock-container.visible {
+  opacity: 1; /* Visible cuando el ratón está cerca de la parte inferior */
+  pointer-events: auto; /* Habilitar interacción cuando esté visible */
+}
+
+.dock-item {
+  position: relative; /* Esto asegura que el icono se mantenga en su lugar */
+  z-index: 2; /* Asegura que el icono esté por encima de otros elementos */
+}
+
+.dock-item > img {
+  margin: 8px;
+  margin-top: 15px;
+}
+
+.dock-item:hover {
+  transform: scale(1.05);
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 80px;
+  background-color: rgb(157, 157, 157);
+  color: #000000;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  bottom: 70px;
+  position: absolute;
+  z-index: 1;
+  left: -10px;
+  font-size: 0.8rem;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Estilo del componente de la aplicación (por encima del icono) */
+.dock-item.open > div {
+  position: absolute;
+  bottom: 60px; /* Ajusta esta distancia para evitar que el componente se solape con el icono */
+  z-index: 10;
+  width: 300px; /* O el tamaño que necesites */
+  left: 0;
+  right: 0;
+  margin: 0 auto; /* Centra el componente */
+  background-color: #fff; /* Estilo del fondo del componente */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra opcional para dar efecto emergente */
+  border-radius: 10px;
+}
+
+.dot-container {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical */
+  background: none;
+  width: fit-content !important;
+  top: 60px;
+  left: -100px;
+}
+
+.dot {
+  width: 5px; /* Diámetro del punto */
+  height: 5px; /* Diámetro del punto */
+  background-color: black; /* Color del punto */
+  border-radius: 50%; /* Hace que el div sea redondo */
+}

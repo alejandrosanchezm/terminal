@@ -1,0 +1,7 @@
+.wifi-icon {
+    height: 14px;
+    position: relative; /* Esto mantiene el icono en su lugar */
+    z-index: 100;
+    margin-right: 10px;
+    margin-left: 10px;
+}

@@ -1,0 +1,104 @@
+/* src/VentanaMac.css */
+
+.ventana {
+  min-width: 450px;
+  min-height: 250px;
+  width: 500px;
+  height: 300px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: absolute;  /* Cambié a 'absolute' para permitir que se muevan sin afectar al layout */
+  top: 50px; /* Espacio desde el top de la ventana */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  z-index: 1;  /* Se asigna un valor inicial de z-index */
+}
+
+.ventana.active {
+  z-index: 1000;  /* La ventana activa tendrá un z-index mayor */
+}
+
+
+.ventana.minimized {
+  width: 100px; /* Tamaño pequeño al minimizar */
+  height: 100px;
+  transform: scale(0.2); /* Reducción de tamaño */
+  opacity: 0; /* Ventana completamente invisible cuando está minimizada */
+  pointer-events: none; /* Evitar interacción */
+}
+
+.ventana-header {
+  background: linear-gradient(135deg, #f1f1f1 0%, #e0e0e0 100%);
+  padding: 10px 20px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}
+
+.ventana-header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.ventana-header-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #c0c0c0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ventana-header-button.close {
+  background-color: #ff605c; /* Rojo (botón de cierre) */
+}
+
+.ventana-header-button.minimize {
+  background-color: #ffbd44; /* Naranja (minimizar) */
+}
+
+.ventana-header-button.zoom {
+  background-color: #00c700; /* Verde (maximizar) */
+}
+
+.ventana-header-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.ventana-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1; /* Esto hace que el cuerpo ocupe todo el espacio disponible */
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+}
+
+.ventana-body h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ventana-body p {
+  font-size: 16px;
+}
+
+/* Estilo para la ventana maximizada */
+.ventana.maximized {
+  width: 100vw;
+  height: 100vh;
+  transform: translate(0, 0); /* Asegura que la ventana ocupe toda la pantalla */
+}
