@@ -32,12 +32,11 @@
 }
 
 .ventana-header {
-  background: linear-gradient(135deg, #f1f1f1 0%, #e0e0e0 100%);
+  background: #f0efef;
   padding: 10px 20px 10px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc;
 }
 
 .ventana-header-buttons {
@@ -76,6 +75,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   flex-grow: 1; /* Esto hace que el cuerpo ocupe todo el espacio disponible */
+  padding-bottom: 30px;
 }
 
 h1 {

@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import './style.css';
 
+const LOCAL_STORAGE_TERMINAL_KEY = "LOCAL_STORAGE_TERMINAL_KEY";
+
 // eslint-disable-next-line react/prop-types
 const Window = ({ title, style={}, children, open, setOpen, isMinimized, setIsMinimized }) => {
 
@@ -43,6 +45,19 @@ const Window = ({ title, style={}, children, open, setOpen, isMinimized, setIsMi
     setIsDragging(false);
   };
 
+  const handleTouchMove = (event) => {
+    handleMouseMove(event)
+  }
+
+  const handleTouchStart = (event) => {
+    handleMouseDown(event)
+  }
+
+  const handleTouchEnd = (event) => {
+    handleMouseUp(event)
+  }
+
+
   const handleMinimize = () => {
     setIsMinimized(!isMinimized);  // Alternar entre minimizar y restaurar
   };
@@ -54,15 +69,22 @@ const Window = ({ title, style={}, children, open, setOpen, isMinimized, setIsMi
   const handleClose = () => {
     // Para cerrar la ventana, podemos simplemente ocultarla
     setOpen(false);
+    if (title == "Terminal") {
+      localStorage.removeItem(LOCAL_STORAGE_TERMINAL_KEY)
+    }
   };
 
   React.useEffect(() => {
     // Añadir y eliminar eventos de mouse
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging]);
 
@@ -83,6 +105,7 @@ const Window = ({ title, style={}, children, open, setOpen, isMinimized, setIsMi
       <div 
         className="ventana-header"
         onMouseDown={handleMouseDown} // Hacer que la cabecera sea arrastrable
+        onTouchStart={handleTouchStart}
       >
         <div className="ventana-header-buttons">
           <div 

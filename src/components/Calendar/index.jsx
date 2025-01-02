@@ -5,7 +5,7 @@ import Window from '../Window';
 export default function Calendar(props) {
 
   return (
-    <Window title={'Calendario'} {...props}>
+    <Window title={'Calendario'} {...props} style={{maxHeight: '580px'}}>
       <InnerCalendar />
     </Window>
   )

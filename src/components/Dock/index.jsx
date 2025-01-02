@@ -21,10 +21,16 @@ export default function Dock({ apps, handleClick, handleMinimized }) {
 
     useEffect(() => {
         document.addEventListener('mousemove', handleMouseMove);
+        document.body.addEventListener('openapp', handleOpenApp);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
+            document.body.removeEventListener('openapp', handleOpenApp);
         };
     }, []);
+
+    function handleOpenApp(e) {
+        alert(JSON.stringify(e))
+    }
 
     return (
         <div className={`dock-container ${isVisible ? 'visible' : ''}`}>

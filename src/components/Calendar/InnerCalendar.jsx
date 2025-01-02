@@ -11,10 +11,18 @@ const InnerCalendar = () => {
     const dias = [];
     const inicioDelMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
     const finDelMes = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
-    const diaSemanaInicio = inicioDelMes.getDay();
+    let diaSemanaInicio = inicioDelMes.getDay();
+
+    // Ajustar el día de inicio para que la semana comience en lunes (0: domingo, 1: lunes, ..., 6: sábado)
+    if (diaSemanaInicio === 0) {
+      diaSemanaInicio = 6; // Si es domingo, lo ajustamos a sábado
+    } else {
+      diaSemanaInicio -= 1; // Desplazamos el resto para que lunes sea 0, martes 1, etc.
+    }
+
     const diasEnMes = finDelMes.getDate();
 
-    // Llenar los días antes del primer día del mes
+    // Llenar los días antes del primer día del mes (ajustado al lunes)
     for (let i = 0; i < diaSemanaInicio; i++) {
       dias.push(null);
     }
@@ -54,28 +62,26 @@ const InnerCalendar = () => {
           <button className="calendario-btn" onClick={() => setFecha(new Date())}>Hoy</button>
           <button className="calendario-btn" onClick={() => cambiarMes(1)}>&gt;</button>
         </div>
-
       </div>
       <div className="calendario-dias">
         <div className="calendario-nombres-dias">
-          <div>Dom</div>
           <div>Lun</div>
           <div>Mar</div>
           <div>Mié</div>
           <div>Jue</div>
           <div>Vie</div>
           <div>Sáb</div>
+          <div>Dom</div>
         </div>
         <div className="calendario-matriz">
-        <div className="calendario-matriz-dias">
-          {dias.map((dia, index) => (
-            <div key={index} className={`calendario-dia ${dia ? "" : "vacío"}`}>
-              {dia}
-            </div>
-          ))}
+          <div className="calendario-matriz-dias">
+            {dias.map((dia, index) => (
+              <div key={index} className={`calendario-dia ${dia ? "" : "vacío"}`}>
+                {dia}
+              </div>
+            ))}
+          </div>
         </div>
-        </div>
-
       </div>
     </div>
   );

@@ -4,8 +4,8 @@ export default function NotesList({ notes, onSelect, activeNoteId }) {
       <ul>
         {notes.map((note) => (
           <li
-            key={note.id}
-            className={note.id === activeNoteId ? "active" : ""}
+            key={note?.id}
+            className={note?.id === activeNoteId ? "active" : ""}
             onClick={() => onSelect(note)}
           >
             {note.title}

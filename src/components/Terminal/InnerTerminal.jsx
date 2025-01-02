@@ -8,13 +8,13 @@ import { formatNow, formatNowLocale } from './dateUtils';
 const LOCAL_STORAGE_TERMINAL_KEY = "LOCAL_STORAGE_TERMINAL_KEY";
 
 function InnerTerminal() {
-    const [lines, setLines] = useState(()=> {
+    const [lines, setLines] = useState(() => {
         let item = localStorage.getItem(LOCAL_STORAGE_TERMINAL_KEY)
-        if (item != null) {
+        if (item != null && item !== undefined) {
             return JSON.parse(item);
         }
         return [];
-    }); 
+    });
 
     const [isSudo, setIsSudo] = useState(false);
     const [isPassword, setIsPassword] = useState(false);
@@ -24,9 +24,11 @@ function InnerTerminal() {
     const [failedSudoers, setFailedSudoers] = useState(0);
     const maxFailedSudoers = 3;
 
-    useEffect(()=> {
+    useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_TERMINAL_KEY, JSON.stringify(lines))
-    },[lines])
+        const contenedor = document.getElementById("terminal-container");
+        contenedor.scrollTop = contenedor.scrollHeight;
+    }, [lines])
 
     const validPassword = "validPassword";
 
@@ -50,11 +52,11 @@ function InnerTerminal() {
 
     useEffect(() => {
         if (historyIndex === -1) {
-          setCurrentCommand('');
+            setCurrentCommand('');
         } else {
-          setCurrentCommand(history[historyIndex] || '');
+            setCurrentCommand(history[historyIndex] || '');
         }
-      }, [historyIndex, history]);
+    }, [historyIndex, history]);
 
     const handlePaste = (e) => {
         e.preventDefault();
@@ -82,7 +84,7 @@ function InnerTerminal() {
 
     const pathToString = (pathArr) => {
         if (pathArr.length <= 1) {
-            return '/'; 
+            return '/';
         }
         return '/' + pathArr.slice(1).join('/');
     };
@@ -98,42 +100,62 @@ function InnerTerminal() {
         if (invalidArgs.length > 0) {
             return [`Error: argumento inválido '${invalidArgs.join(', ')}'`, 'Uso: ls [-al]'];
         }
-            
+
         let joinedArgs = args.join("")
-        
+
         const showLongList = joinedArgs.includes('l');
         const showAll = joinedArgs.includes('a');
-        
+
         if (node.type !== 'folder' || !node.children) {
             return [`${pathToString(currentPath)} no es un directorio`];
         }
-    
+
         const filteredChildren = showAll
             ? node.children
             : node.children.filter(child => !child.name.startsWith('.'));
-    
+
         if (showLongList) {
             return filteredChildren.map(child => {
-                const permissions = getPermissions(child);  
-                const owner = child.owner || 'user';        
-                const group = child.group || 'group';       
-                const size = child.size || '0';             
-                const lastModified = child.lastModified || 'never               '; 
+                const permissions = getPermissions(child);
+                const owner = child.owner || 'user';
+                const group = child.group || 'group';
+                const size = child.size || '0';
+                const lastModified = child.lastModified || 'never               ';
                 return `${permissions}  ${owner}  ${group}  ${size}  ${lastModified}  ${child.name}`;
             });
         }
-    
+
         const names = filteredChildren.map((child) => child.name);
         return [names.join('  ')];
     };
-    
+
     const getPermissions = (child) => {
-        return child.isDirectory ? 'd---------' : '-r--------'; 
+        return child.isDirectory ? 'd---------' : '-r--------';
     };
-    
+
     const handlePwd = () => {
         return [pathToString(currentPath)];
     };
+
+    const handleSleep = (args) => {
+        if (args[0] == 'infinite') {
+            return ['No te pases! 😆']
+        }
+        if (isNaN(args[0])) {
+            return [`sleep: Opción ilegal -- ${args[0]}`, 'Uso: sleep <number> (seconds)']
+        }
+        if (parseInt(args[0]) > 1000) {
+            return ['¿No eres demasiado dormilón? 😴']
+        }
+        if (parseInt(args[0]) <= 0) {
+            return ['Si claro, ahora podemos viajar en el tiempo...']
+        }
+        setIsSleeping(true);
+        setTimeout(() => {
+            setIsSleeping(false)
+        }, [parseInt(args[0]) * 1000])
+        return ['']
+    }
 
     const handleCd = (args) => {
         const node = getCurrentNode();
@@ -224,7 +246,7 @@ function InnerTerminal() {
         return [];
     }
 
-    const handleTouch = (args, content='') => {
+    const handleTouch = (args, content = '') => {
         if (args.length === 0) {
             return ['Uso: mkdir <ruta>'];
         }
@@ -265,7 +287,7 @@ function InnerTerminal() {
         }
         if ((item.startsWith("'") && item.endsWith("'")) || (item.startsWith('"') && item.endsWith('"'))) {
             item = item.slice(1, -1)
-        } 
+        }
         return [item]
     }
 
@@ -289,27 +311,7 @@ function InnerTerminal() {
                 response = ['Su: Sorry']
                 break;
             case 'sleep':
-                if (args[0] == 'infinite') {
-                    response = ['No te pases! 😆']
-                    break;
-                }
-                if (isNaN(args[0])) {
-                    response = [`sleep: Opción ilegal -- ${args[0]}`,'Uso: sleep <number> (seconds)']
-                    break;
-                }
-                if (parseInt(args[0]) > 1000) {
-                    response = ['¿No eres demasiado dormilón? 😴']
-                    break;
-                } 
-                if (parseInt(args[0]) <= 0) {
-                    response = ['Si claro, ahora podemos viajar en el tiempo...']
-                    break;
-                } 
-                setIsSleeping(true);
-                setTimeout(()=> {
-                    setIsSleeping(false)
-                },[parseInt(args[0]) * 1000])
-                response = ['']
+                response = handleSleep(args)
                 break;
             case 'su':
                 if (tmpSudo && failedSudoers < maxFailedSudoers) {
@@ -321,7 +323,7 @@ function InnerTerminal() {
                 response = ['Su: Sorry']
                 break;
             case 'clear':
-                response = []; 
+                response = [];
                 break;
             case 'pwd':
                 response = handlePwd();
@@ -363,7 +365,7 @@ function InnerTerminal() {
         }
         if (pipeline == null) return response;
         return handlePipe(response, pipeline, symbol)
-    };  
+    };
 
     function handlePipe(commandOutput, path, append) {
         let node = findNodeByPath(path, currentPath, fileSystem);
@@ -373,12 +375,12 @@ function InnerTerminal() {
             if (response != []) return response;
         }
         else {
-            append == '>>' ? node.content = node.content + "\n" + joinedOutput :  node.content = joinedOutput
+            append == '>>' ? node.content = node.content + "\n" + joinedOutput : node.content = joinedOutput
         }
         return ['']
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         if (isPassword) {
             setLines((prev) => [...prev, {
                 text: 'password: ',
@@ -387,26 +389,26 @@ function InnerTerminal() {
         } else {
             setPassword('')
         }
-    },[isPassword])
+    }, [isPassword])
 
-    useEffect(()=> {
+    useEffect(() => {
         if (failedSudoers > 0 && failedSudoers < maxFailedSudoers) {
             setLines((prev) => [...prev, {
                 text: `Número de intentos disponibles: ${maxFailedSudoers - failedSudoers}.`,
                 type: 'output',
             }]);
-        } 
-    },[failedSudoers])
+        }
+    }, [failedSudoers])
 
     const handleKeyDown = (e) => {
         if (isSleeping) return;
         if (e.key === 'Enter') {
             e.preventDefault();
             if (isPassword) {
-                setLines((prev) => [...prev.slice(0,-1)]);
+                setLines((prev) => [...prev.slice(0, -1)]);
                 if (password === validPassword) {
                     if (sudoCommando.trim() === 'clear') {
-                        setLines([]); 
+                        setLines([]);
                     } else {
                         const outputLines = processCommand(sudoCommando, true).map((out) => ({
                             text: out,
@@ -442,7 +444,7 @@ function InnerTerminal() {
             setHistoryIndex(-1);
             const commandLine = { text: pathToString(currentPath) + currentPrompt + currentCommand, type: 'command' };
             if (currentCommand.trim() === 'clear') {
-                setLines([]); 
+                setLines([]);
             } else {
                 setLines((prev) => [...prev, commandLine]);
                 if ((currentCommand.trim().startsWith("sudo") || currentCommand.trim() == 'su') && !isSudo) {
@@ -515,25 +517,25 @@ function InnerTerminal() {
 
     return (
         <div
+            id="terminal-container"
             className="terminal-container"
             tabIndex={0}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             ref={terminalRef}
-            contentEditable={true}
-            suppressContentEditableWarning={true}  // Evita advertencias de React
         >
-                {lines.map(({ text, type }, i) => (
-                    <div
-                        key={i}
-                        className={`terminal-line ${type === 'command' ? 'command-line' : 'output-line'} ${text.includes('password:') ? 'password-line' : ''}`}
-                    >
-                        {text}
-                        {isPassword && text.includes('password:') && (
-                            <span className="password-command">{currentCommand}</span>
-                        )}
-                    </div>
-                ))}
+            {lines.map(({ text, type }, i) => (
+                <div
+                    key={i}
+                    id={lines.length - 1 === i ? 'last line' : `${i}line`}
+                    className={`terminal-line ${type === 'command' ? 'command-line' : 'output-line'} ${text.includes('password:') ? 'password-line' : ''}`}
+                >
+                    {text}
+                    {isPassword && text.includes('password:') && (
+                        <span className="password-command">{currentCommand}</span>
+                    )}
+                </div>
+            ))}
             {!isPassword && !isSleeping && <div className="terminal-line command-line">
                 {pathToString(currentPath)}{currentPrompt}{currentCommand}
                 <span className="cursor"></span>

@@ -6,6 +6,7 @@
   font-family: 'Helvetica Neue', sans-serif;
   display: flex;
   flex-direction: column;
+  color: black;
 }
 
 .calendario-header {
@@ -28,6 +29,7 @@
   cursor: pointer;
   padding: 8px;
   margin: 5px;
+  color: black;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra opcional para dar efecto emergente */
 
 }
@@ -51,7 +53,7 @@
 .calendario-matriz-dias {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));  /* Ajusta sin desbordar (X) */
-  grid-template-rows: repeat(6, minmax(0, 1fr));  /* Distribuye 6 filas equitativamente (Y) */
+  /*grid-template-rows: repeat(6, minmax(0, 1fr));  /* Distribuye 6 filas equitativamente (Y) */
   height: 100%;  /* Asegura que el grid ocupa el contenedor */
 }
 

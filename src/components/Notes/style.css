@@ -10,6 +10,7 @@
     padding: 20px;
     border-right: 1px solid #ddd;
     height: 100vh !important;
+    color: black;
 }
 
 .notes-sidebar h2 {
@@ -54,6 +55,8 @@
     resize: none;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     overflow-y: scroll;
+    background: white;
+    color: black;
 }
 
 .notes-title {
@@ -63,6 +66,8 @@
     border: none;
     outline: none;
     font-weight: bold;
+    background: white;
+    color: black;
   }
 
   .notes-title:focus-visible {
@@ -80,6 +85,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background: white;
+    color: black;
 }
 
 .notes-button > svg {

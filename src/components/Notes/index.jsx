@@ -26,7 +26,7 @@ export default function Notes(props) {
         }
 
     });
-    const [activeNote, setActiveNote] = useState(notes[0]);
+    const [activeNote, setActiveNote] = useState(notes.length > 0 ? notes[0] : null);
 
     useEffect(()=> {
         localStorage.setItem(NOTES_LOCALSTORAGE_KEY, JSON.stringify(notes))
@@ -55,7 +55,7 @@ export default function Notes(props) {
     };
 
     const handleCreateNote = () => {
-        const maxId = notes.reduce((max, note) => (note.id > max ? note.id : max), 0);
+        const maxId = notes.reduce((max, note) => (note?.id > max ? note?.id : max), 0);
         const newNote = {
             id: maxId + 1,
             title: "Nueva Nota",
@@ -67,7 +67,7 @@ export default function Notes(props) {
     
     const handleDeleteNote = () => {
         if (activeNote !== null) {
-            const updatedNotes = notes.filter(note => note.id !== activeNote.id);
+            const updatedNotes = notes.filter(note => note?.id !== activeNote?.id);
             setNotes(updatedNotes);
             setActiveNote(updatedNotes.length > 0 ? updatedNotes[0] : null);
         }
@@ -88,17 +88,17 @@ export default function Notes(props) {
                             </button>
                         </div>
                     </div>
-                    <NotesList notes={notes} onSelect={handleNoteSelect} activeNoteId={activeNote.id} />
+                    <NotesList notes={notes} onSelect={handleNoteSelect} activeNoteId={activeNote?.id || -1} />
                 </div>
                 <div className="notes-editor">
                     <input
                         className="notes-title"
                         type="text"
-                        value={activeNote.title}
+                        value={activeNote?.title | ""}
                         onChange={handleTitleChange}
                     />
                     <textarea
-                        value={activeNote.content}
+                        value={activeNote?.content || ""}
                         onChange={handleContentChange}
                         rows={15}
                     />
